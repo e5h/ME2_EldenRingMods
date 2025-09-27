@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+
   <PropertyGroup Label="Globals">
     <ProjectGuid>{f1c483c1-0878-4719-9044-ca0f9670d097}</ProjectGuid>
     <RootNamespace>SkipTheIntro</RootNamespace>
@@ -18,5 +21,7 @@
   <ImportGroup Label="Shared"/>
   <PropertyGroup Label="UserMacros"/>
   <ImportGroup Label="ExtensionTargets"/>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
 
 </Project>

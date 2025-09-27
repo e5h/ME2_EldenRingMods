@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+
   <PropertyGroup Label="Globals">
     <ProjectGuid>{bfea10a1-2cad-43e4-bc12-99ff1a9653e7}</ProjectGuid>
     <RootNamespace>RemoveVignette</RootNamespace>
@@ -18,5 +21,7 @@
   <ImportGroup Label="Shared"/>
   <PropertyGroup Label="UserMacros"/>
   <ImportGroup Label="ExtensionTargets"/>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
 
 </Project>
