@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="CopyBuiltDlls" AfterTargets="Build">
+    <!-- Normalize the folders -->
+    <PropertyGroup>
+      <SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
+    </PropertyGroup>
+
+    <!-- Capture all build files -->
+    <ItemGroup>
+      <BuiltDlls
+        Include="$(TargetPath)"
+        Condition="'$(OutputType)' == 'DynamicLibrary'"/>
+      <OtherFiles
+        Include="$(TargetDir)*.*"
+        Exclude="$(TargetPath);$(TargetDir)*.obj;$(TargetDir)*.tlog\**"/>
+    </ItemGroup>
+
+    <!-- Copy built DLLs into "compiled_mods" -->
+    <Copy
+      SourceFiles="@(BuiltDlls)"
+      DestinationFolder="$(SolutionRoot)compiled_mods\"
+      SkipUnchangedFiles="true"/>
+
+    <!-- Copy other files into "compiled_mods\[project]\" -->
+    <Copy
+      SourceFiles="@(OtherFiles)"
+      DestinationFolder="$(SolutionRoot)compiled_mods\$(ProjectName)\"
+      SkipUnchangedFiles="true"/>
+  </Target>
+</Project>
