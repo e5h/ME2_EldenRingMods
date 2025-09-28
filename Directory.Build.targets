@@ -47,7 +47,7 @@
     <PropertyGroup>
       <BuildInfoTime>$([System.DateTime]::UtcNow.ToString("u"))</BuildInfoTime>
       <BuildInfoDate>_$([System.DateTime]::Now.ToString("yyyy-MM-dd"))</BuildInfoDate>
-      <BuildOutputDir>$(SolutionRoot)compiled_mods$(BuildInfoDate)</BuildOutputDir>
+      <BuildOutputDir>$(SolutionRoot)_compiled_mods$(BuildInfoDate)</BuildOutputDir>
       <BuildInfoFile>$(BuildOutputDir)\build_info.txt</BuildInfoFile>
     </PropertyGroup>
     
