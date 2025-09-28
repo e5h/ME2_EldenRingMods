@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="CopyBuiltDlls" AfterTargets="Build">
+    <!-- Normalize the folders -->
+    <PropertyGroup>
+      <SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
+    </PropertyGroup>
+
+    <!-- Capture all build files -->
+    <ItemGroup>
+      <!-- Grab the built .dll file -->
+      <BuiltDllFiles
+        Include="$(TargetPath)"
+        Condition="'$(ConfigurationType)' == 'DynamicLibrary' and Exists('$(TargetPath)')"/>
+      <!-- Include files in the "config" subfolder -->
+      <OtherFiles
+        Include="$(ProjectDir)config\**\*.*"
+        Condition="Exists('$(ProjectDir)config')"/>
+      <!-- Include .pdb file (if applicable) -->
+      <OtherFiles
+        Include="$(TargetDir)$(TargetName).pdb"
+        Condition="Exists('$(TargetDir)$(TargetName).pdb')"/>
+      <!-- Include .lib file (if applicable) -->
+      <OtherFiles
+        Include="$(TargetDir)$(TargetName).lib"
+        Condition="Exists('$(TargetDir)$(TargetName).lib')"/>
+      <!-- Include .exp file (if applicable) -->
+      <OtherFiles
+        Include="$(TargetDir)$(TargetName).exp"
+        Condition="Exists('$(TargetDir)$(TargetName).exp')"/>
+    </ItemGroup>
+
+    <!-- Create destination repositories -->
+    <MakeDir
+      Directories="$(SolutionRoot)compiled_mods"
+      Condition="!Exists('$(SolutionRoot)compiled_mods')"/>
+    <MakeDir
+      Directories="$(SolutionRoot)compiled_mods\$(ProjectName)"
+      Condition="@(OtherFiles) != '' and !Exists('$(SolutionRoot)compiled_mods\$(ProjectName)')"/>
+
+    <!-- Debug messages for copying -->
+    <Message Text="Copying $(ProjectName) DLLs: @(BuiltDllFiles) to $(SolutionRoot)compiled_mods\" Importance="High"/>
+    <Message Text="Copying $(ProjectName) files: @(OtherFiles) to $(SolutionRoot)compiled_mods\$(ProjectName)\" Importance="High"/>
+
+    <!-- Copy built DLLs into "compiled_mods" -->
+    <Copy
+      SourceFiles="@(BuiltDllFiles)"
+      DestinationFolder="$(SolutionRoot)compiled_mods\"
+      SkipUnchangedFiles="true"
+      Condition="@(BuiltDllFiles) != ''"/>
+
+    <!-- Copy other files into "compiled_mods\[project]\" -->
+    <Copy
+      SourceFiles="@(OtherFiles)"
+      DestinationFolder="$(SolutionRoot)compiled_mods\$(ProjectName)\"
+      SkipUnchangedFiles="true"
+      Condition="@(OtherFiles) != ''"/>
+
+  </Target>
+</Project>
