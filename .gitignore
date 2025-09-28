@@ -398,4 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Compiled mods
-compiled_mods/
+compiled_mods*/

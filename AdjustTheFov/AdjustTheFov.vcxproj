@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- Properties -->
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
+  </ImportGroup>
 
   <PropertyGroup Label="Globals">
     <ProjectGuid>{42def6a1-381d-48cb-8fee-9ef7621ed0eb}</ProjectGuid>
@@ -16,10 +20,6 @@
   <ItemGroup>
     <ClCompile Include="DllMain.cpp"/>
   </ItemGroup>
-
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
-  </ImportGroup>
   <ImportGroup Label="Shared"/>
   <PropertyGroup Label="UserMacros"/>
   <ItemGroup>
@@ -27,10 +27,11 @@
       <FileType>Document</FileType>
     </MASM>
   </ItemGroup>
+
+  <!-- Targets -->
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
   </ImportGroup>
-
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
-
+  
 </Project>

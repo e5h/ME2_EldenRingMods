@@ -1,6 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="CopyBuiltDlls" AfterTargets="Build">
+
+  <!-- Adds Git information to the output package -->
+  <Target Name="GetBuildInfo" AfterTargets="Build">
+    <!-- Normalize the folders -->
+    <PropertyGroup>
+      <SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
+    </PropertyGroup>
+
+    <!-- (1) Check if Git is installed -->
+    <Exec Command="git --version" ConsoleToMsBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitVersionOutput"/>
+    </Exec>
+
+    <!-- (2) Get the latest Git commit hash -->
+    <Exec Command="git rev-parse HEAD" ConsoleToMsBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHashOutput"/>
+    </Exec>
+
+    <!-- (3) Get the latest Git commit date -->
+    <Exec Command="git show -s --format=%%ci HEAD" ConsoleToMsBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitDateOutput"/>
+    </Exec>
+
+    <!-- (4) Get the current Git branch name -->
+    <Exec Command="git rev-parse --abbrev-ref HEAD" ConsoleToMsBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitBranchOutput"/>
+    </Exec>
+
+    <!-- (5) Get local modification status -->
+    <Exec Command="git status --porcelain" ConsoleToMsBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitStatusOutput"/>
+    </Exec>
+    <PropertyGroup>
+      <GitStatusTrimmed>$([System.String]::Copy('$(GitStatusOutput)').Trim())</GitStatusTrimmed>
+      <GitStatus Condition="$([System.String]::IsNullOrWhiteSpace('$(GitStatusTrimmed)'))">No local modifications.</GitStatus>
+      <GitStatus Condition="!$([System.String]::IsNullOrWhiteSpace('$(GitStatusTrimmed)'))">WARNING: Local modifications are present!</GitStatus>
+    </PropertyGroup>
+    
+    <!-- (6) Get git origin URL -->
+    <Exec Command="git config --get remote.origin.url" ConsoleToMsBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitRemoteOutput"/>
+    </Exec>
+
+    <!-- (7) Get build information -->
+    <PropertyGroup>
+      <BuildInfoTime>$([System.DateTime]::UtcNow.ToString("u"))</BuildInfoTime>
+      <BuildInfoDate>_$([System.DateTime]::Now.ToString("yyyy-MM-dd"))</BuildInfoDate>
+      <BuildOutputDir>$(SolutionRoot)compiled_mods$(BuildInfoDate)</BuildOutputDir>
+      <BuildInfoFile>$(BuildOutputDir)\build_info.txt</BuildInfoFile>
+    </PropertyGroup>
+    
+    <!-- Define build output lines -->
+    <ItemGroup>
+      <BuildInfoLines Include="##### BUILD INFORMATION #####"/>
+      <BuildInfoLines Include="Git Version: $(GitVersionOutput)"/>
+      <BuildInfoLines Include="Git Remote: $(GitRemoteOutput)"/>
+      <BuildInfoLines Include="Commit Hash: $(GitCommitHashOutput)"/>
+      <BuildInfoLines Include="Commit Timestamp: $(GitCommitDateOutput)"/>
+      <BuildInfoLines Include="Branch: $(GitBranchOutput)"/>
+      <BuildInfoLines Include="Local Modifications?: $(GitStatus)"/>
+    </ItemGroup>
+
+  </Target>
+  
+  <!-- Takes the built DLLs and any additional files, and puts them in a release folder -->
+  <Target Name="CopyBuildFiles" AfterTargets="GetBuildInfo">
     <!-- Normalize the folders -->
     <PropertyGroup>
       <SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
@@ -32,11 +97,11 @@
 
     <!-- Create destination repositories -->
     <MakeDir
-      Directories="$(SolutionRoot)compiled_mods"
-      Condition="!Exists('$(SolutionRoot)compiled_mods')"/>
+      Directories="$(BuildOutputDir)"
+      Condition="!Exists('$(BuildOutputDir)')"/>
     <MakeDir
-      Directories="$(SolutionRoot)compiled_mods\$(ProjectName)"
-      Condition="@(OtherFiles) != '' and !Exists('$(SolutionRoot)compiled_mods\$(ProjectName)')"/>
+      Directories="$(BuildOutputDir)\$(ProjectName)"
+      Condition="@(OtherFiles) != '' and !Exists('$(BuildOutputDir)\$(ProjectName)')"/>
 
     <!-- Debug messages for copying -->
     <Message Text="Copying $(ProjectName) DLLs: @(BuiltDllFiles) to $(SolutionRoot)compiled_mods\" Importance="High"/>
@@ -45,16 +110,21 @@
     <!-- Copy built DLLs into "compiled_mods" -->
     <Copy
       SourceFiles="@(BuiltDllFiles)"
-      DestinationFolder="$(SolutionRoot)compiled_mods\"
+      DestinationFolder="$(BuildOutputDir)\"
       SkipUnchangedFiles="true"
       Condition="@(BuiltDllFiles) != ''"/>
 
     <!-- Copy other files into "compiled_mods\[project]\" -->
     <Copy
       SourceFiles="@(OtherFiles)"
-      DestinationFolder="$(SolutionRoot)compiled_mods\$(ProjectName)\"
+      DestinationFolder="$(BuildOutputDir)\$(ProjectName)\"
       SkipUnchangedFiles="true"
       Condition="@(OtherFiles) != ''"/>
+    
+    <!-- Overwrite the build info file -->
+    <Message Text="Writing build info to $(BuildInfoFile)..." Importance="high"/>
+    <WriteLinesToFile File="$(BuildInfoFile)" Lines="@(BuildInfoLines)" Overwrite="true"/>
 
   </Target>
+
 </Project>
