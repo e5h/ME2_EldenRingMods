@@ -12,27 +12,31 @@
       <BuiltDllFiles
         Include="$(TargetPath)"
         Condition="'$(ConfigurationType)' == 'DynamicLibrary' and Exists('$(TargetPath)')"/>
+      <!-- Include files in the "config" subfolder -->
+      <OtherFiles
+        Include="$(ProjectDir)config\**\*.*"
+        Condition="Exists('$(ProjectDir)config')"/>
       <!-- Include .pdb file (if applicable) -->
       <OtherFiles
         Include="$(TargetDir)$(TargetName).pdb"
-        Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+        Condition="Exists('$(TargetDir)$(TargetName).pdb')"/>
       <!-- Include .lib file (if applicable) -->
       <OtherFiles
         Include="$(TargetDir)$(TargetName).lib"
-        Condition="Exists('$(TargetDir)$(TargetName).lib')" />
+        Condition="Exists('$(TargetDir)$(TargetName).lib')"/>
       <!-- Include .exp file (if applicable) -->
       <OtherFiles
         Include="$(TargetDir)$(TargetName).exp"
-        Condition="Exists('$(TargetDir)$(TargetName).exp')" />
+        Condition="Exists('$(TargetDir)$(TargetName).exp')"/>
     </ItemGroup>
-    
+
     <!-- Create destination repositories -->
     <MakeDir
       Directories="$(SolutionRoot)compiled_mods"
-      Condition="!Exists('$(SolutionRoot)compiled_mods')" />
+      Condition="!Exists('$(SolutionRoot)compiled_mods')"/>
     <MakeDir
       Directories="$(SolutionRoot)compiled_mods\$(ProjectName)"
-      Condition="@(OtherFiles) != '' and !Exists('$(SolutionRoot)compiled_mods\$(ProjectName)')" />
+      Condition="@(OtherFiles) != '' and !Exists('$(SolutionRoot)compiled_mods\$(ProjectName)')"/>
 
     <!-- Debug messages for copying -->
     <Message Text="Copying $(ProjectName) DLLs: @(BuiltDllFiles) to $(SolutionRoot)compiled_mods\" Importance="High"/>
@@ -51,6 +55,6 @@
       DestinationFolder="$(SolutionRoot)compiled_mods\$(ProjectName)\"
       SkipUnchangedFiles="true"
       Condition="@(OtherFiles) != ''"/>
-    
+
   </Target>
 </Project>
