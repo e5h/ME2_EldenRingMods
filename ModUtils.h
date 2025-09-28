@@ -341,6 +341,8 @@ namespace ModUtils
 
 			bool isMemoryReadable = (
 				protection == PAGE_EXECUTE_READWRITE
+				|| protection == PAGE_EXECUTE_READ
+				|| protection == PAGE_EXECUTE
 				|| protection == PAGE_READWRITE
 				|| protection == PAGE_READONLY
 				|| protection == PAGE_WRITECOPY
