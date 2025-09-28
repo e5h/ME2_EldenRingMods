@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- Properties -->
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
 
   <PropertyGroup Label="Globals">
     <ProjectGuid>{90273855-a4bd-4a80-a712-b55b336d928e}</ProjectGuid>
@@ -16,14 +18,12 @@
   <ItemGroup>
     <ClCompile Include="DllMain.cpp"/>
   </ItemGroup>
-
-  <ImportGroup Label="ExtensionSettings"/>
+  
   <ImportGroup Label="Shared"/>
   <PropertyGroup Label="UserMacros"/>
   <ItemGroup>
     <ClInclude Include="InputTranslation.h"/>
   </ItemGroup>
-  <ImportGroup Label="ExtensionTargets"/>
 
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
@@ -31,6 +31,8 @@
     </Link>
   </ItemDefinitionGroup>
 
+  <!-- Targets -->
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
 
 </Project>
