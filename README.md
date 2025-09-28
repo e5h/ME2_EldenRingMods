@@ -1,6 +1,10 @@
 # ME2_EldenRingMods
 A collection of mods made by [techiew](https://github.com/techiew). Refactored to be used with [ModEngine2](https://github.com/soulsmods/ModEngine2/releases). Compatible with Elden Ring 1.16.1.
 
+## ModEngine2 Example Configurations
+
+- [Seamless Co-op + Item & Enemy Randomizer](_examples/ersc_randomizer.md)
+
 ## Mods:
 - [Unlock the framerate](https://www.nexusmods.com/eldenring/mods/216)
 - [Remove chromatic aberration](https://www.nexusmods.com/eldenring/mods/179)
@@ -12,10 +16,6 @@ A collection of mods made by [techiew](https://github.com/techiew). Refactored t
 - [Increase animation distance](https://www.nexusmods.com/eldenring/mods/349)
 - [Disable rune loss](https://www.nexusmods.com/eldenring/mods/376)
 - [Skip the intro](https://www.nexusmods.com/eldenring/mods/421)
-
-## ModEngine2 Example Configurations
-
-- [Seamless Co-op + Item & Enemy Randomizer](_examples/ersc_randomizer.md)
 
 ## Compilation
 Build under `Release|x64` configuration. A folder in the solution root will be created, labeled `_compiled_mods_yyyy-mm-dd`.
